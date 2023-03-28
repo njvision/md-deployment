@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  catalog-service:
+    depends_on:
+      - md-postgres
+    image: "catalog-service"
+    container_name: "catalog-service"
+    ports:
+      - 9001:9001
+      - 8001:8001
+    environment:
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8001
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://md-postgres:5432/mddb_catalog
+      - SPRING_PROFILES_ACTIVE=testdata
+
+  md-postgres:
+    image: "postgres:14.4"
+    container_name: "md-postgres"
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234567890
+      - POSTGRES_DB=mddb_catalog
