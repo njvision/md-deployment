@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: md-postgres
+  labels:
+    db: md-postgres
+spec:
+  selector:
+    matchLabels:
+      db: md-postgres
+  template:
+    metadata:
+      labels:
+        db: md-postgres
+    spec:
+      containers:
+        - name: md-postgres
+          image: postgres:14.4
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: '1234567890'
+            - name: POSTGRES_DB
+              value: mddb_catalog
+          resources:
+            requests:
+              cpu: 100m
+              memory: 60Mi
+            limits:
+              cpu: 200m
+              memory: 120Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: md-postgres
+  labels:
+    db: md-postgres
+spec:
+  type: ClusterIP
+  selector:
+    db: md-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
