@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: md-redis
+  labels:
+    db: md-redis
+spec:
+  selector:
+    matchLabels:
+      db: md-redis
+  template:
+    metadata:
+      labels:
+        db: md-redis
+    spec:
+      containers:
+        - name: md-redis
+          image: redis:7.0
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+            limits:
+              cpu: 200m
+              memory: 100Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: md-redis
+  labels:
+    db: md-redis
+spec:
+  type: ClusterIP
+  selector:
+    db: md-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

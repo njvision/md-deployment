@@ -56,3 +56,9 @@ services:
       - POSTGRES_PASSWORD=1234567890
     volumes:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  md-redis:
+    image: "redis:7.0"
+    container_name: "md-redis"
+    ports:
+      - 6379:6379
