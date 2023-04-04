@@ -62,3 +62,21 @@ services:
     container_name: "md-redis"
     ports:
       - 6379:6379
+
+  md-rabbitmq:
+    image: rabbitmq:3.10-management
+    container_name: md-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  md-keycloak:
+    image: quay.io/keycloak/keycloak:19.0
+    container_name: "md-keycloak"
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=user
+      - KEYCLOAK_ADMIN_PASSWORD=password
+    ports:
+      - 8080:8080
