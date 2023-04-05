@@ -71,12 +71,22 @@ services:
       - 15672:15672
     volumes:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
   md-keycloak:
     image: quay.io/keycloak/keycloak:19.0
     container_name: "md-keycloak"
-    command: start-dev
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
     environment:
       - KEYCLOAK_ADMIN=user
       - KEYCLOAK_ADMIN_PASSWORD=password
     ports:
       - 8080:8080
+  md-ui:
+    image: "ghcr.io/polarbookshop/polar-ui:v1"
+    container_name: "md-ui"
+    ports:
+      - 9004:9004
+    environment:
+      - PORT=9004
