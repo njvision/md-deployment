@@ -711,7 +711,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "polar-keycloak-secret",
+      "secret": "md-keycloak-secret",
       "redirectUris": [
         "*"
       ],
