@@ -5,12 +5,17 @@ services:
       - fluent-bit
       - md-keycloak
       - md-postgres
+      - tempo
     image: "catalog-service"
     container_name: "catalog-service"
     ports:
       - 9001:9001
       - 8001:8001
     environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/lib/opentelemetry-javaagent-1.17.0.jar
+      - OTEL_SERVICE_NAME=catalog-service
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - OTEL_METRICS_EXPORTER=none
       - BPL_JVM_THREAD_COUNT=50
       - BPL_DEBUG_ENABLED=true
       - BPL_DEBUG_PORT=8001
@@ -172,6 +177,7 @@ services:
     depends_on:
       - loki
       - prometheus
+      - tempo
     ports:
       - "3000:3000"
     environment:
@@ -206,3 +212,12 @@ services:
       - "9090:9090"
     volumes:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  tempo:
+    image: grafana/tempo:1.5.0
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "4317:4317"
+    volumes:
+      - ./observability/tempo/tempo.yml:/etc/tempo-config.yml
